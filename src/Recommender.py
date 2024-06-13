@@ -24,6 +24,7 @@ in_tags = os.path.join(os.path.dirname(__file__), 'movie-lens-data/tags.csv')
 out = "./output.txt"
 
 neighborhood_size = 5
+# variable that defines the max number of recommendations per user
 rec_count = 5
 
 
@@ -241,14 +242,20 @@ def recommend_items(estimated_ratings, count):
         ratings = sorted(estimated_ratings[user_id].items(), key=lambda x: x[1], reverse=True)
         # top-N items to recommend to users
         n = [item_id for item_id, _ in ratings[:count]]
-        # appending ties
-        if len(ratings) > count:
-            i = ratings[count - 1][1]
-            for item_id, rating in ratings[count:]:
-                if rating == i:
-                    n.append(item_id)
-                else:
-                    break
+
+        ## This block of code appears to be causing the function to ignore the count = 5.
+        ## Likely due to appending a matching item_id
+        ## the output looks fine without it, though.
+        # # appending ties
+        # if len(ratings) > count:
+        #     # checking if the next item over is a tie, and appending if so
+        #     i = ratings[count - 1][1]
+        #     for item_id, rating in ratings[count:]:
+        #         if rating == i:
+        #             n.append(item_id)
+        #         else:
+        #             break
+
         # sorting the items lexicographically
         n = sorted(n)
         # add the recommended items to the list
